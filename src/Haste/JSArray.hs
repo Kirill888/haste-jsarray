@@ -99,7 +99,7 @@ zipWith::(Pack a, Pack b, Unpack c)=>(a->b->c)->JSArray a->JSArray b->JSArray c
 zipWith f xs ys = unsafePerformIO $ zipWith' (\x y -> return $ f x y) xs ys
   where
     zipWith'::(Pack a, Pack b, Unpack c)=>(a->b->IO c)->JSArray a->JSArray b->IO (JSArray c)
-    zipWith' = ffi "(function(f, xs, ys) {result = [];for (var i = 0;i < Math.min(xs.length, ys.length); ++i) {result.push(f(xs[i], ys[i]));};return result})"
+    zipWith' = ffi "(function(f, xs, ys) {var result = [];for (var i = 0;i < Math.min(xs.length, ys.length); ++i) {result.push(f(xs[i], ys[i]));};return result})"
 
 fromList::Unpack a=>[a]->JSArray a
 fromList vals = unsafePerformIO $ do
