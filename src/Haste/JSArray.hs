@@ -27,6 +27,15 @@ pop = ffi "(function(arr) {return arr.pop();})"
 (!)::Pack a=>JSArray a->Int->IO a
 (!) = ffi "(function(arr, idx) {return arr[idx];})"
 
+slice::Int->Int->JSArray a->JSArray a
+slice begin end arr = unsafePerformIO $ slice' begin end arr
+  where
+    slice'::Int->Int->JSArray a->IO (JSArray a)
+    slice' = ffi "(function(begin, end, arr) {return arr.slice(begin, end);})"
+
+take::Int->JSArray a->JSArray a
+take = slice 0
+
 fromList::Unpack a=>[a]->JSArray a
 fromList vals = unsafePerformIO $ do
   arr <- newJSArray
