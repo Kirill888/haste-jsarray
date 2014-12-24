@@ -74,6 +74,12 @@ concatMap f = concat . fmap f
 concatMap'::(Pack a, Unpack b, NFData a)=>(a->[b])->JSArray a->JSArray b
 concatMap' f = concatMap (fromList . f)
 
+replicate::Unpack a=>Int->a->JSArray a
+replicate n x = unsafePerformIO $ replicate' n x
+  where
+    replicate'::Unpack a=>Int->a->IO (JSArray a)
+    replicate' = ffi "(function(n, x) {var result = [];for(var i = 0;i < n; ++i) {result.push(x)};return result;})"
+
 slice::Int->Int->JSArray a->JSArray a
 slice begin end arr = unsafePerformIO $ slice' begin end arr
   where
